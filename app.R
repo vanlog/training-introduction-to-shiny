@@ -4,6 +4,9 @@
 library(shiny)
 library(dplyr)
 library(ggplot2)
+library(futile.logger)
+
+flog.info("Loading data...")
 
 df <- data.frame(
   id = 1:1000,
@@ -37,7 +40,11 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
+  flog.info("Running the server...")
+
   output$histogram <- renderPlot({
+    flog.info("Rendering 'histogram' with %s bins...", input$n_bins)
+
     ggplot(df) +
       aes(x = values) +
       geom_histogram(bins = input$n_bins,
