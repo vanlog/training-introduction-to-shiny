@@ -13,15 +13,25 @@ df <- data.frame(
 # ui ----------------------------------------------------------------------
 
 ui <- fluidPage(
-  titlePanel("Hello World!"),
-  sliderInput(inputId = "n_bins",
-              label = "Number of bins:",
-              min = 0,
-              max = 100,
-              value = 50),
-  plotOutput("histogram")
-)
 
+  titlePanel("Hello World!"),
+
+  sidebarLayout(
+    sidebarPanel(
+      width = 3,
+      sliderInput(inputId = "n_bins",
+                  label = "Number of bins:",
+                  min = 0,
+                  max = 100,
+                  value = 50)
+    ),
+
+    mainPanel(
+      width = 9,
+      plotOutput("histogram")
+    )
+  )
+)
 
 # server ------------------------------------------------------------------
 
@@ -30,7 +40,14 @@ server <- function(input, output, session) {
   output$histogram <- renderPlot({
     ggplot(df) +
       aes(x = values) +
-      geom_histogram(bins = input$n_bins)
+      geom_histogram(bins = input$n_bins,
+                     fill = "lightblue",
+                     color = "blue",
+                     alpha = 0.7) +
+      ggtitle("Values Histogram") +
+      xlab("Values") +
+      ylab("Count") +
+      theme_bw()
   })
 
 }
