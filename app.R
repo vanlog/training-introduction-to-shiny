@@ -11,6 +11,8 @@ flog.info("Loading data...")
 
 df <- read_csv("./data/marvel-vs-dc.csv")
 
+df_colnames <- colnames(df)
+
 # ui ----------------------------------------------------------------------
 
 ui <- fluidPage(
@@ -25,6 +27,10 @@ ui <- fluidPage(
                   min = 0,
                   max = 100,
                   value = 50),
+      selectInput(inputId = "var_name",
+                  label = "Choose a variable",
+                  choices = df_colnames),
+      tags$hr(),
       textInput(inputId = "plot_title",
                 label = "Customize the plot title"),
       actionButton(inputId = "update_plot",
@@ -45,12 +51,14 @@ server <- function(input, output, session) {
   flog.info("Running the server...")
 
   output$histogram <- renderPlot({
+    req(is.numeric(df[[input$var_name]]))
+
     flog.info("Rendering 'histogram' with %s bins...", input$n_bins)
 
     input$update_plot
 
     ggplot(df) +
-      aes(x = Minutes) +
+      aes_string(x = input$var_name) +
       geom_histogram(bins = input$n_bins,
                      fill = "lightblue",
                      color = "blue",
