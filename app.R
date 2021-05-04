@@ -56,6 +56,23 @@ server <- function(input, output, session) {
 
   flog.info("Running the server...")
 
+  counter <- reactiveVal(0)
+
+  observe({
+    flog.info("Updating 'counter'...")
+
+    input$n_bins
+    input$var_name
+    input$rate
+    input$plot_title
+    input$update_plot
+
+    new_counter <- isolate( counter() ) + 1   # store the new value
+    counter( new_counter )                    # update counter
+
+    flog.info("'counter' new value: %s", new_counter)
+  })
+
   df_subset_rea <- reactive({
     flog.info("updating 'df_subset_rea'...")
 
