@@ -51,14 +51,22 @@ server <- function(input, output, session) {
 
   flog.info("Running the server...")
 
+  df_subset_rea <- reactiveVal(NULL)
+
+  observe({
+    flog.info("updating 'df_subset_rea'...")
+
+    df_subset_rea( df )  # assignment like: df_subset <- df
+  })
+
   output$histogram <- renderPlot({
-    req(is.numeric(df[[input$var_name]]))
+    req(is.numeric(df_subset_rea()[[input$var_name]]))
 
     flog.info("Rendering 'histogram' with %s bins...", input$n_bins)
 
     input$update_plot
 
-    ggplot(df) +
+    ggplot(df_subset_rea()) +
       aes_string(x = input$var_name, fill = "Company") +
       geom_histogram(bins = input$n_bins,
                      color = "blue",
@@ -69,13 +77,13 @@ server <- function(input, output, session) {
   })
 
   output$density <- renderPlot({
-    req(is.numeric(df[[input$var_name]]))
+    req(is.numeric(df_subset_rea()[[input$var_name]]))
 
     flog.info("Rendering 'density'")
 
     input$update_plot
 
-    ggplot(df) +
+    ggplot(df_subset_rea()) +
       aes_string(x = input$var_name, fill = "Company") +
       geom_density(color = "blue",
                    alpha = 0.7) +
