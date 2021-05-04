@@ -30,6 +30,11 @@ ui <- fluidPage(
       selectInput(inputId = "var_name",
                   label = "Choose a variable",
                   choices = df_colnames),
+      sliderInput(inputId = "rate",
+                  label = "Rate interval:",
+                  min = 0,
+                  max = 10,
+                  value = c(0, 10)),
       tags$hr(),
       textInput(inputId = "plot_title",
                 label = "Customize the plot title"),
@@ -56,7 +61,15 @@ server <- function(input, output, session) {
   observe({
     flog.info("updating 'df_subset_rea'...")
 
-    df_subset_rea( df )  # assignment like: df_subset <- df
+    Rate_lower <- input$rate[[1]]
+    Rate_upper <- input$rate[[2]]
+
+    df_subset_rea(
+      df %>% filter(
+        Rate_lower < Rate,
+        Rate < Rate_upper
+      )
+    )
   })
 
   output$histogram <- renderPlot({
