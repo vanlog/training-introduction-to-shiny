@@ -59,9 +59,8 @@ server <- function(input, output, session) {
     input$update_plot
 
     ggplot(df) +
-      aes_string(x = input$var_name) +
+      aes_string(x = input$var_name, fill = "Company") +
       geom_histogram(bins = input$n_bins,
-                     fill = "lightblue",
                      color = "blue",
                      alpha = 0.7) +
       ggtitle( isolate(input$plot_title) ) +
