@@ -39,7 +39,8 @@ ui <- fluidPage(
 
     mainPanel(
       width = 9,
-      plotOutput("histogram")
+      plotOutput("histogram"),
+      plotOutput("density")
     )
   )
 )
@@ -64,6 +65,23 @@ server <- function(input, output, session) {
                      color = "blue",
                      alpha = 0.7) +
       ggtitle( isolate(input$plot_title) ) +
+      ylab("Count") +
+      theme_bw()
+  })
+
+  output$density <- renderPlot({
+    req(is.numeric(df[[input$var_name]]))
+
+    flog.info("Rendering 'density' with %s bins...", input$n_bins)
+
+    input$update_plot
+
+    ggplot(df) +
+      aes_string(x = input$var_name, fill = "Company") +
+      geom_density(bins = input$n_bins,
+                   color = "blue",
+                   alpha = 0.7) +
+      ggtitle( paste("Distribution of", input$var_name) ) +
       ylab("Count") +
       theme_bw()
   })
