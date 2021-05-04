@@ -3,15 +3,13 @@
 
 library(shiny)
 library(dplyr)
+library(readr)
 library(ggplot2)
 library(futile.logger)
 
 flog.info("Loading data...")
 
-df <- data.frame(
-  id = 1:1000,
-  values = rnorm(1000)
-)
+df <- read_csv("./data/marvel-vs-dc.csv")
 
 # ui ----------------------------------------------------------------------
 
@@ -52,13 +50,12 @@ server <- function(input, output, session) {
     input$update_plot
 
     ggplot(df) +
-      aes(x = values) +
+      aes(x = Minutes) +
       geom_histogram(bins = input$n_bins,
                      fill = "lightblue",
                      color = "blue",
                      alpha = 0.7) +
       ggtitle( isolate(input$plot_title) ) +
-      xlab("Values") +
       ylab("Count") +
       theme_bw()
   })
