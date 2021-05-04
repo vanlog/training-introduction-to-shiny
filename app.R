@@ -26,7 +26,11 @@ ui <- fluidPage(
                   label = "Number of bins:",
                   min = 0,
                   max = 100,
-                  value = 50)
+                  value = 50),
+      textInput(inputId = "plot_title",
+                label = "Customize the plot title"),
+      actionButton(inputId = "update_plot",
+                   label = "Update plot")
     ),
 
     mainPanel(
@@ -45,13 +49,15 @@ server <- function(input, output, session) {
   output$histogram <- renderPlot({
     flog.info("Rendering 'histogram' with %s bins...", input$n_bins)
 
+    input$update_plot
+
     ggplot(df) +
       aes(x = values) +
       geom_histogram(bins = input$n_bins,
                      fill = "lightblue",
                      color = "blue",
                      alpha = 0.7) +
-      ggtitle("Values Histogram") +
+      ggtitle( isolate(input$plot_title) ) +
       xlab("Values") +
       ylab("Count") +
       theme_bw()
