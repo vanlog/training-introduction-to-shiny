@@ -56,19 +56,15 @@ server <- function(input, output, session) {
 
   flog.info("Running the server...")
 
-  df_subset_rea <- reactiveVal(NULL)
-
-  observe({
+  df_subset_rea <- reactive({
     flog.info("updating 'df_subset_rea'...")
 
     Rate_lower <- input$rate[[1]]
     Rate_upper <- input$rate[[2]]
 
-    df_subset_rea(
-      df %>% filter(
-        Rate_lower < Rate,
-        Rate < Rate_upper
-      )
+    df %>% filter(
+      Rate_lower < Rate,
+      Rate < Rate_upper
     )
   })
 
