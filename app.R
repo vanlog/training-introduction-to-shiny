@@ -85,10 +85,10 @@ server <- function(input, output, session) {
     )
   })
 
-  output$histogram <- renderPlot({
+  histogram <- eventReactive(input$update_plot, {
     req(is.numeric(df_subset_rea()[[input$var_name]]))
 
-    flog.info("Rendering 'histogram' with %s bins...", input$n_bins)
+    flog.info("Creating 'histogram' with %s bins...", input$n_bins)
 
     input$update_plot
 
@@ -100,6 +100,12 @@ server <- function(input, output, session) {
       ggtitle( isolate(input$plot_title) ) +
       ylab("Count") +
       theme_bw()
+  })
+
+  output$histogram <- renderPlot({
+    flog.info("Rendering 'histogram'")
+
+    histogram()
   })
 
   output$density <- renderPlot({
