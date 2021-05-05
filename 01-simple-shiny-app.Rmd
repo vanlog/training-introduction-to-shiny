@@ -26,35 +26,81 @@ slides > slide {
 3. add `titlePanel("Hello World!")` in the `fluidPage` argument lists
 
 
-## 0.2: add a user interface
+## 0.2: add a user interface widget (no solution)
 
 1. add a sliderInput: 
-   ```
+   ```r
    sliderInput(inputId = "n_bins",
                label = "Number of bins:",
                min = 0,
                max = 100,
                value = 50),
    ```
-2. add a `plotOutput`, and the plot does not appear.
+2. add a `plotOutput`. Verify that, however, the plot does not appear.
+   ```r
+   plotOutput("histogram")
+   ```
 
 
 ## 0.3: Add the server logic
 
-1. add `renderPlot`
+1. add `renderPlot` inside the server function:
+   ```r
+   output$histogram <- renderPlot({
+     ggplot(df) +
+       aes(x = values) +
+       geom_histogram(bins = input$n_bins)
+   })
+   ```
 
 
 ## 0.4: Improve the appearance 
 
 1. improve plot: improve the appearance of the plot, with colour and transparency (server)
-2. sidebarLayout: organize the object in a sidebar and a body (UI)
+   ```r
+   output$histogram <- renderPlot({
+    ggplot(df) +
+      aes(x = values) +
+      geom_histogram(bins = input$n_bins,
+                     fill = "lightblue",
+                     color = "blue",
+                     alpha = 0.7) +
+      ggtitle("Values Histogram") +
+      xlab("Values") +
+      ylab("Count") +
+      theme_bw()
+   })
+   ```
+2. `sidebarLayout`: organize the object in a sidebar and a body (UI)
+   ```r
+   sidebarLayout(
+    sidebarPanel(
+      width = 3,
+      sliderInput(inputId = "n_bins",
+                  label = "Number of bins:",
+                  min = 0,
+                  max = 100,
+                  value = 50)
+    ),
+
+    mainPanel(
+      width = 9,
+      plotOutput("histogram")
+    )
+   )
+   ```
 
 
 ## 0.5: Understand what is happening 
 
 <!-- beginning 2nd hour -->
 
-1. add `flog.info("some messages...")` inside your code and see when they are run.
+Add `flog.info("some messages...")` inside your code and see when they are run. For example:
+
+1. `flog.info("Loading data...")` in *global*
+2. `flog.info("Running the server...")` in the `server` function
+3. `flog.info("Rendering 'histogram' with %s bins...", input$n_bins)` inside `output$histogram <- renderPlot({`
+
 
 ## 0.6: Trigger reactivity or isolate
 
@@ -74,14 +120,18 @@ slides > slide {
 
    NB: with `isolate` you are providing another reactive context to be triggered when the `output$plot_title` changes: in this case an isolated one, which will not trigger any reaction.
    
-4. add an `actionButton` to trigger the reaction manually.
+4. add an `actionButton` to trigger the reaction manually:
+   ```r
+         actionButton(inputId = "update_plot",
+                   label = "Update plot")
+   ```
 
 
 ## 0.7: new data set
 
-1. read a new dataset with `df <- read_csv("./data/marvel-vs-dc.csv")`
-2. change the x axis of the histogram to `Minutes` to plot the timing statistics
-3. remove the `xlab` option which is now wrong
+1. read a new dataset with `df <- read_csv("./data/marvel-vs-dc.csv")` in the *global*.
+2. change the x axis of the histogram to `Minutes` to plot the timing statistics.
+3. remove the `xlab` option which is now wrong.
 
 
 ## 0.8: select a variable
