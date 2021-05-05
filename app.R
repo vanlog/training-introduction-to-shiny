@@ -108,20 +108,28 @@ server <- function(input, output, session) {
     histogram()
   })
 
-  output$density <- renderPlot({
+  density <- reactiveValues(plot = NULL)
+
+  observeEvent( input$update_plot, {
     req(is.numeric(df_subset_rea()[[input$var_name]]))
 
-    flog.info("Rendering 'density'")
+    flog.info("Creating 'density'")
 
     input$update_plot
 
-    ggplot(df_subset_rea()) +
+    density$plot <- ggplot(df_subset_rea()) +
       aes_string(x = input$var_name, fill = "Company") +
       geom_density(color = "blue",
                    alpha = 0.7) +
       ggtitle( paste("Distribution of", input$var_name) ) +
       ylab("Count") +
       theme_bw()
+  })
+
+  output$density <- renderPlot({
+    flog.info("Rendering 'density'")
+
+    density$plot
   })
 
 }
