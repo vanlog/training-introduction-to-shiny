@@ -1,0 +1,281 @@
+---
+title: "Understanding reactive programming"
+author: "Andrea Melloncelli"
+date: "10/5/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+slides > slide {
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+</style>
+
+
+# Reactivity
+
+<https://shiny.rstudio.com/articles/reactivity-overview.html>
+
+
+
+# Copy-on-modify
+
+
+## Initialize a list
+
+```{r}
+original_list <- list(
+  a = 10,
+  b = 20
+)
+
+
+original_list$a
+original_list$b
+```
+
+## Make a copy of that list
+
+```{r}
+copied_list <- original_list
+copied_list$a
+copied_list$b
+```
+
+
+## Change the copy
+
+```{r}
+copied_list$a <- 11
+copied_list$b <- 22
+copied_list$a
+copied_list$b
+```
+
+## The original is still unchanged
+
+```{r}
+copied_list$a
+
+
+original_list$a
+```
+
+
+# Copy-by-reference
+
+
+## Initialize an environment
+
+```{r}
+original_env <- new.env()
+
+original_env$a <- 10
+original_env$b <- 20
+
+original_env$a
+original_env$b
+```
+
+## Make a copy of that environment
+
+```{r}
+copied_env <- original_env
+
+copied_env$a
+copied_env$b
+```
+
+
+## Change the copy
+
+```{r}
+copied_env$a <- 11
+copied_env$b <- 22
+
+copied_env$a
+copied_env$b
+```
+
+## The original is also changed
+
+```{r}
+copied_env$a
+original_env$a
+```
+
+
+
+# Who decide?
+
+## Copy-on-modify is used with
+
+- vectors
+- lists
+- data frames (which are lists of vectors)
+
+
+## Copy-by-reference is used with
+
+- environments
+- R6 objects (which use environments)
+- Reactive Objects (which use R6 objects)
+
+
+
+# Reactives
+
+## ReactiveVal
+
+```{r include=FALSE}
+library(shiny)
+```
+
+```{r}
+n_bins <- reactiveVal(50)
+
+isolate( n_bins() )
+```
+
+
+## Modify a reactiveVal
+
+```{r}
+n_bins(100)
+
+isolate( n_bins() )
+```
+
+## Reactive
+
+```{r}
+r_1 <- reactive({ n_bins() * 100 })
+isolate( r_1() )
+```
+## A reactive automatically change...
+
+...when one of its reactive dependency:
+
+```{r}
+isolate( n_bins() )
+isolate( r_1() )
+
+n_bins(200)
+isolate( r_1() )
+```
+
+
+## ReactiveValues
+
+```{r}
+reactive_list <- reactiveValues(a = 10, b = 20)
+reactive_list
+isolate( reactive_list$a )
+
+```
+
+
+## ReactiveValues update
+
+```{r}
+reactive_list$a <- 11
+reactive_list$b <- 22
+
+
+isolate( reactive_list$a )
+isolate( reactive_list$b )
+```
+
+
+## ReactiveValues copy
+
+```{r}
+reactive_list <- reactiveValues(a = 10, b = 20)
+
+reactive_copy <- reactive_list
+
+isolate( reactive_list$a )
+isolate( reactive_copy$a )
+
+```
+
+
+## ReactiveValues copy modification, and original is modified
+
+```{r}
+isolate( reactive_list$a )
+isolate( reactive_copy$a )
+
+reactive_copy$a <- 11
+
+isolate( reactive_list$a )
+isolate( reactive_copy$a )
+
+```
+
+
+## Quiz 1: `reactiveVal`
+
+```{r eval=FALSE, include=TRUE}
+n_bins <- reactiveVal(50)
+
+n <- n_bins()
+```
+
+Which one is a reactive data structure?
+
+1. `n_bins`
+2. `n_bins()`
+3. `n`
+
+## Answer 1: `reactiveVal`
+
+```{r eval=FALSE, include=TRUE}
+n_bins <- reactiveVal(50)
+
+n <- n_bins()
+```
+
+Which one is a reactive data structure?
+
+1. `n_bins`     <-- a `reactiveVal`, the CORRECT ANSWER
+2. `n_bins()`
+3. `n`
+
+## Answer 1: `reactiveVal`
+
+```{r eval=FALSE, include=TRUE}
+n_bins <- reactiveVal(50)
+
+n <- n_bins()
+```
+
+Which one is a reactive data structure?
+
+1. `n_bins`     <-- a `reactiveVal`, the CORRECT ANSWER
+2. `n_bins()`   <-- an expression that triggers reactivity (i.e. if used inside a `reactive()`)
+3. `n`          <-- a variable carrying the `reactiveVal` value. It does NOT trigger any reactivity.
+
+
+## Quiz 2: `reactiveValues`
+
+```{r eval=FALSE, include=TRUE}
+reactive_list <- reactiveValues(a = 10, b = 20)
+a <- reactive_list$a
+```
+
+Which one is a reactive data structure?
+
+1. `reactive_list`
+2. `reactive_list$a`
+3. `a`
+
+
+
+
+
