@@ -72,14 +72,13 @@ server <- function(input, output, session) {
   output$density <- renderPlot({
     req(is.numeric(df[[input$var_name]]))
 
-    flog.info("Rendering 'density' with %s bins...", input$n_bins)
+    flog.info("Rendering 'density'")
 
     input$update_plot
 
     ggplot(df) +
       aes_string(x = input$var_name, fill = "Company") +
-      geom_density(bins = input$n_bins,
-                   color = "blue",
+      geom_density(color = "blue",
                    alpha = 0.7) +
       ggtitle( paste("Distribution of", input$var_name) ) +
       ylab("Count") +
