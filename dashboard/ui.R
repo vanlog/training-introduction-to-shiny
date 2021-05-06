@@ -1,15 +1,23 @@
 ui <- dashboardPage(
   dashboardHeader(title = "My Dashboard"),
 
-  ## Sidebar content ----
+  ## Sidebar content -----------------------------------------------------------
   dashboardSidebar(
-    sidebarMenu(
 
+    sidebarMenu(
+      menuItem(text = "Analysis", tabName = "analysis", icon = icon("fa-line-chart", lib = "font-awesome"))
     )
+
   ),
 
-  ## Body content ----
+  ## Body content --------------------------------------------------------------
   dashboardBody(
+
+    ## Analysis content --------------------------------------------------------
+    tabItem(
+      tabName = "analysis",
+      h2("Analysis")
+    )
 
   )
 )
