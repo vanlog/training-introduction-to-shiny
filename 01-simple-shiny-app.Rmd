@@ -15,6 +15,9 @@ slides > slide {
   overflow-x: auto !important;
   overflow-y: auto !important;
 }
+code{
+  background: #E4E5E7;
+}
 </style>
 
 # Introduction to Shiny - Session 1
@@ -22,6 +25,8 @@ slides > slide {
 ## 0.1: create a shiny Template app
 
 Starting point: 0.0 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.0.zip))
+
+Goal: creating a Hello World application.
 
 1. Create a new `app.R` file
 2. use the `shinyapp` snippet to create the first shiny application.
@@ -31,6 +36,8 @@ Starting point: 0.0 ([download zip](https://github.com/vanlog/training-introduct
 ## 0.2: add a user interface widget (no solution)
 
 Starting point: 0.1 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.1.zip))
+
+Goal: add an input and an output widget.
 
 1. add a sliderInput: 
    ```r
@@ -48,6 +55,8 @@ Starting point: 0.1 ([download zip](https://github.com/vanlog/training-introduct
 
 ## 0.3: Add the server logic
 
+Goal: adding the logic to create the plot.
+
 1. add `renderPlot` inside the server function:
    ```r
    output$histogram <- renderPlot({
@@ -61,6 +70,8 @@ Starting point: 0.1 ([download zip](https://github.com/vanlog/training-introduct
 ## 0.4: Improve the appearance 
 
 Starting point: 0.3 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.3.zip))
+
+Goal: getting a nice look application.
 
 1. improve plot: improve the appearance of the plot, with colour and transparency (server)
    ```r
@@ -101,6 +112,8 @@ Starting point: 0.3 ([download zip](https://github.com/vanlog/training-introduct
 
 Starting point: 0.4 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.4.zip))
 
+Goal: generating log messages to understand reactivity.
+
 Add `flog.info("some messages...")` inside your code and see when they are run. For example:
 
 1. `flog.info("Loading data...")` in *global*
@@ -108,11 +121,27 @@ Add `flog.info("some messages...")` inside your code and see when they are run. 
 3. `flog.info("Rendering 'histogram' with %s bins...", input$n_bins)` inside `output$histogram <- renderPlot({`
 
 
+
+## Reactive Variables (0.5)
+
+The [Reactive Graph](https://mastering-shiny.org/reactive-graph.html) is the flux diagram to schematize a Shiny application.
+
+This is the procedure to show the Reactive Graph of your app is (you need the `reactlog` package installed):
+
+```r
+reactlog::reactlog_enable()
+runApp()
+shiny::reactlogShow() 
+```
+
+
 ## 0.6: Trigger reactivity or isolate
 
 Starting point: 0.5 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.5.zip))
 
-1. add `textInput` in the UI, to let the user choose the title of the plot
+Goal: using `isolate`.
+
+1. add [`textInput`](https://shiny.rstudio.com/gallery/widget-gallery.html) in the UI, to let the user choose the title of the plot
    ```r
       textInput(inputId = "plot_title",
                 label = "Customize the plot title")
@@ -122,7 +151,7 @@ Starting point: 0.5 ([download zip](https://github.com/vanlog/training-introduct
 
 3. `isolate` the `output$plot_title` from triggering the reaction:
 
-   ```
+   ```r
    isolate(output$plot_title)
    ```
 
@@ -130,14 +159,16 @@ Starting point: 0.5 ([download zip](https://github.com/vanlog/training-introduct
    
 4. add an `actionButton` to trigger the reaction manually:
    ```r
-         actionButton(inputId = "update_plot",
-                   label = "Update plot")
+   actionButton(inputId = "update_plot",
+                label = "Update plot")
    ```
 
 
-## 0.7: new data set
+## 0.7: New data set
 
 Starting point: 0.6 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.6.zip))
+
+Goal: using a global procedure to load data at initialization time.
 
 1. read a new dataset with `df <- read_csv("./data/marvel-vs-dc.csv")` in the *global*.
 2. change the x axis of the histogram to `Minutes` to plot the timing statistics.
@@ -147,6 +178,8 @@ Starting point: 0.6 ([download zip](https://github.com/vanlog/training-introduct
 ## 0.8: select a variable
 
 Starting point: 0.7 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.7.zip))
+
+Goal: add a `selectInput` to the *UI*.
 
 1. create a new variable in *global* with `df_colnames <- colnames(df)`
 2. add a `selectInput` in the *UI*
@@ -158,7 +191,7 @@ Starting point: 0.7 ([download zip](https://github.com/vanlog/training-introduct
 
 Starting point: 0.8 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.8.zip))
 
-The goal is to add a new density plot below the other.
+Goal: adding a new plot (a density plot) below the other one.
 
 1. add a new output plot `plotOutput` in the *UI* with `outputId = "density"`
 2. add a new `renderPlot` in the *server* (advice: use `geom_density` in place of `geom_histogram`).
@@ -166,31 +199,35 @@ The goal is to add a new density plot below the other.
 3. group and colour two densities on the variable `Company` (advice: `aes_string(fill = "Company"))` )
 
 
-## 0.10: colour the histogram by 'Company'
+## 0.10: colour the histogram by 'Company' (exercise)
 
 Starting point: 0.9 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.9.zip))
+
+Goal: modify a plot to make it consistent with the new object.
 
 Working on 'histogram':
 
 1. group and colour two stacked histograms on the variable `Company` (advice: `aes_string(fill = "Company"))` ). 
 
 
-
 ## 0.11: reactive dataset
 
 Starting point: 0.10 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.10.zip))
+
+Goal: using `reactiveVal` and `observe`.
+
+A new *reactive variable* will be apart of the *reactive graph* and trigger the reloading of all objects depending on it. Here we need to create a subset of the dataset. Every time this subset will change all the derived objects will be updated.
 
 1. create a `reactiveVal` to store a value of pre-filtered data frame. Set the initialization value to `NULL`. Inside the `server` function:
    ```r
    df_subset_rea <- reactiveVal(NULL)
    ```
-2. create an `observe` that update that value with `df` (provide the observe with a `flog.info("updating 'df_subset_rea'...")` call)
+2. create an `observe` that update that value with `df` (provide the observe with a `flog.info("updating 'df_subset_rea'...")` call):
    ```r
    observe({
     flog.info("updating 'df_subset_rea'...")
 
     df_subset_rea( df )  # assignment like: df_subset <- df
-    )
    })
    ```
 3. use the `df_subset_rea` in the `renderPlot`s. The result is unchanged. In the next step you will be able to change the `df_subset_rea` according with some criteria.
@@ -200,6 +237,8 @@ Starting point: 0.10 ([download zip](https://github.com/vanlog/training-introduc
 
 Starting point: 0.11 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.11.zip))
 
+Goal: try to add another input widget.
+
 1. create [Slider Range](https://shiny.rstudio.com/gallery/widget-gallery.html) (`(inputId = "rate")`). NB: `rate` is a real number in range [0,10].
 2. modify the `observe` to filter `df` on  `input$rate`.
 
@@ -207,6 +246,8 @@ Starting point: 0.11 ([download zip](https://github.com/vanlog/training-introduc
 ## 0.13: use reactive in place of observe and reactiveVal
 
 Starting point: 0.12 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.12.zip))
+
+Goal: using `reactive`.
 
 1. remove the definition of `df_subset_rea` as `reactiveVal`
 2. substitute the `observe` with the new definition of `df_subset_rea` as `reactive`: the expression is the same except for that you must return the filtered dataframe and not re-assignig it to `df_subset_rea`.
@@ -216,6 +257,10 @@ Starting point: 0.12 ([download zip](https://github.com/vanlog/training-introduc
 
 Starting point: 0.13 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.13.zip))
 
+Goal: understanding state.
+
+This is an example where the application need to keep track of a state (the count value) not present among inputs. In this cases `reactiveVal` or `reactiveValues` are mandatory,
+
 Count the number of times any reactive has been modified.
 
 1. create a counter as a `reactiveVal`
@@ -223,13 +268,23 @@ Count the number of times any reactive has been modified.
 3. log with `flog.info(...)` the counter value.
 
 
-## 0.15: reactiveEvent to plot Histogram only pressing the button (exercise)
+## 0.15: eventReactive to plot Histogram only pressing the button (exercise)
 
 Starting point: 0.14 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.14.zip))
 
+Goal: using `eventReactive`.
+
 Working on Histogram:
 
-1. substitute `output$histogram <- renderPlot({ ...EXPRESSION... })` with `histogram <- eventReactive(input$update_plot, { ...EXPRESSION... })`. Fix log message substituting "Rendering" with "Creating".
+1. substitute 
+   ```r
+   output$histogram <- renderPlot({ ...EXPRESSION... })
+   ```
+   with 
+   ```r
+   histogram <- eventReactive(input$update_plot, { ...EXPRESSION... })
+   ```
+   Fix log message substituting "Rendering" with "Creating".
 2. create again `output$histogram <- renderPlot({ histogram() })`. Add a log message: `flog.info("Rendering 'histogram'")`
 3. Verify that the Histogram is created and updated only when you press the button. Verify that the Density plot has the old behaviour.
 
@@ -238,10 +293,20 @@ Working on Histogram:
 
 Starting point: 0.15 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.15.zip))
 
+Goal: using `observeEvent`.
+
 Working on density plot:
 
 1. create a reactiveValues `density <- reactiveValues(plot = NULL)`
-2. 1. substitute `output$density <- renderPlot({ ...EXPRESSION... })` with `observeEvent(input$update_plot, { ...EXPRESSION... })`. Fix the last command line changing the result from an assignation to the `reactiveValues`, `density`:
+2. substitute 
+   ```r
+   output$density <- renderPlot({ ...EXPRESSION... })
+   ```
+   with
+   ```r
+   observeEvent(input$update_plot, { ...EXPRESSION... })
+   ```
+   Fix the last command line changing the result from an assignation to the `reactiveValues`, `density`:
    ```r
    density$plot <- ggplot(df_subset_rea()) +
       aes_string(x = input$var_name, fill = "Company") +
@@ -254,5 +319,45 @@ Working on density plot:
    ```
 3. Fix log message substituting "Rendering" with "Creating".
 4. create again `output$density <- renderPlot({ density$plot })`. Add a log message: `flog.info("Rendering 'density'")`
+
+## Exercise 0.16.1: add a box plot 
+
+Goal: add another plot.
+
+Add a plot with a box plot of the distribution of `input$var_name` split on `Company`.
+
+
+## Exercise 0.16.2: add a scatter plot
+
+Goal: add another plot and insert a new variable selection.
+
+Add a scatter plot of `input$var_name` over `input$var_name_2` (make this variable selectable by the *UI*)
+
+
+## Exercise 0.16.3: decide what depens on button
+
+Goal: improve the understanding of the reactive functions.
+
+Play around with `isolate`, `reactive`, `eventReactive`, `observe` and `observeEvent` to drive the reactivity.
+
+
+## Exercise 0.16.4: reactiveValues
+
+Goal: using `reactiveValues`
+
+Sometime you need to have a list of values. You can try subsituting a `reactiveVal` with a single element `reactiveValues` to understand how it works. 
+
+Remember:
+
+```r
+# create the Values
+my_values <- reactiveValues(my_data = NULL)
+
+# update the value
+my_values$my_data <- 0
+
+# use value
+my_values$my_data + 1
+```
 
 
