@@ -21,12 +21,16 @@ slides > slide {
 
 ## 0.1: create a shiny Template app
 
+Starting point: 0.0 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.0.zip))
+
 1. Create a new `app.R` file
 2. use the `shinyapp` snippet to create the first shiny application.
 3. add `titlePanel("Hello World!")` in the `fluidPage` argument lists
 
 
 ## 0.2: add a user interface widget (no solution)
+
+Starting point: 0.1 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.1.zip))
 
 1. add a sliderInput: 
    ```r
@@ -55,6 +59,8 @@ slides > slide {
 
 
 ## 0.4: Improve the appearance 
+
+Starting point: 0.3 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.3.zip))
 
 1. improve plot: improve the appearance of the plot, with colour and transparency (server)
    ```r
@@ -93,7 +99,7 @@ slides > slide {
 
 ## 0.5: Understand what is happening 
 
-<!-- beginning 2nd hour -->
+Starting point: 0.4 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.4.zip))
 
 Add `flog.info("some messages...")` inside your code and see when they are run. For example:
 
@@ -104,13 +110,15 @@ Add `flog.info("some messages...")` inside your code and see when they are run. 
 
 ## 0.6: Trigger reactivity or isolate
 
+Starting point: 0.5 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.5.zip))
+
 1. add `textInput` in the UI, to let the user choose the title of the plot
    ```r
       textInput(inputId = "plot_title",
                 label = "Customize the plot title")
   ```
 
-2. use `output$plot_title` in `ggtitle` to set the title in the plot.
+2. (exercise) use `output$plot_title` in `ggtitle` to set the title in the plot.
 
 3. `isolate` the `output$plot_title` from triggering the reaction:
 
@@ -129,12 +137,16 @@ Add `flog.info("some messages...")` inside your code and see when they are run. 
 
 ## 0.7: new data set
 
+Starting point: 0.6 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.6.zip))
+
 1. read a new dataset with `df <- read_csv("./data/marvel-vs-dc.csv")` in the *global*.
 2. change the x axis of the histogram to `Minutes` to plot the timing statistics.
 3. remove the `xlab` option which is now wrong.
 
 
 ## 0.8: select a variable
+
+Starting point: 0.7 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.7.zip))
 
 1. create a new variable in *global* with `df_colnames <- colnames(df)`
 2. add a `selectInput` in the *UI*
@@ -143,6 +155,8 @@ Add `flog.info("some messages...")` inside your code and see when they are run. 
 
 
 ## 0.9: add a new plot (exercise)
+
+Starting point: 0.8 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.8.zip))
 
 The goal is to add a new density plot below the other.
 
@@ -154,14 +168,17 @@ The goal is to add a new density plot below the other.
 
 ## 0.10: colour the histogram by 'Company'
 
+Starting point: 0.9 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.9.zip))
+
 Working on 'histogram':
 
 1. group and colour two stacked histograms on the variable `Company` (advice: `aes_string(fill = "Company"))` ). 
 
 
 
-
 ## 0.11: reactive dataset
+
+Starting point: 0.10 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.10.zip))
 
 1. create a `reactiveVal` to store a value of pre-filtered data frame. Set the initialization value to `NULL`. Inside the `server` function:
    ```r
@@ -181,17 +198,23 @@ Working on 'histogram':
 
 ## 0.12: filter on a Rate range (exercise)
 
+Starting point: 0.11 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.11.zip))
+
 1. create [Slider Range](https://shiny.rstudio.com/gallery/widget-gallery.html) (`(inputId = "rate")`). NB: `rate` is a real number in range [0,10].
 2. modify the `observe` to filter `df` on  `input$rate`.
 
 
 ## 0.13: use reactive in place of observe and reactiveVal
 
+Starting point: 0.12 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.12.zip))
+
 1. remove the definition of `df_subset_rea` as `reactiveVal`
 2. substitute the `observe` with the new definition of `df_subset_rea` as `reactive`: the expression is the same except for that you must return the filtered dataframe and not re-assignig it to `df_subset_rea`.
 
 
 ## 0.14: count the number of times any reactive (exercise)
+
+Starting point: 0.13 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.13.zip))
 
 Count the number of times any reactive has been modified.
 
@@ -202,6 +225,8 @@ Count the number of times any reactive has been modified.
 
 ## 0.15: reactiveEvent to plot Histogram only pressing the button (exercise)
 
+Starting point: 0.14 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.14.zip))
+
 Working on Histogram:
 
 1. substitute `output$histogram <- renderPlot({ ...EXPRESSION... })` with `histogram <- eventReactive(input$update_plot, { ...EXPRESSION... })`. Fix log message substituting "Rendering" with "Creating".
@@ -210,6 +235,8 @@ Working on Histogram:
 
 
 ## 0.16: observeEvent to plot Density only pressing the button
+
+Starting point: 0.15 ([download zip](https://github.com/vanlog/training-introduction-to-shiny/archive/refs/heads/0.15.zip))
 
 Working on density plot:
 
