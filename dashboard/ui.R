@@ -16,7 +16,12 @@ ui <- dashboardPage(
     ## Analysis content --------------------------------------------------------
     tabItem(
       tabName = "analysis",
-      h2("Analysis")
+      h2("Analysis"),
+      box(
+        title = "Movies",
+        status = "primary",
+        width = 6
+      )
     )
 
   )
