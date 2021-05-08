@@ -20,7 +20,8 @@ ui <- dashboardPage(
       box(
         title = "Movies",
         status = "primary",
-        width = 6
+        width = 6,
+        plotOutput(outputId = "scatter")
       )
     )
 
