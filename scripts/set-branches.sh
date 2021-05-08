@@ -29,5 +29,6 @@ gcob 0.5 && greset 0.6^
 gcob 0.4 && greset 0.5^
 gcob 0.3 && greset 0.4^
 gcob 0.1 && greset 0.3^
+gcob 0.0 && greset 0.1^
 
-git push --all -f
+# git push --all -f
