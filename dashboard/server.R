@@ -11,5 +11,22 @@ server <- function(input, output, session) {
             axis.title.y = element_text(size = 18))
   })
 
+  output$select_table <- renderDataTable({
+    flog.info("Rendering select_table...")
+
+    datatable(
+      df,
+      option = list(
+        search = list(
+          regex = TRUE,            # use regular expressions
+          caseInsensitive = FALSE, # upper case letter differ from lower case
+          search = ''              # initial string to be searched
+        ),
+        pageLength = 3
+      ),
+      filter = list(position = 'top'),
+    )
+  })
+
 }
 
