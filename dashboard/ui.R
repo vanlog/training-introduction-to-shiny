@@ -12,35 +12,39 @@ ui <- dashboardPage(
 
   ## Body content --------------------------------------------------------------
   dashboardBody(
+    tabItems(
 
-    ## Analysis content --------------------------------------------------------
-    tabItem(
-      tabName = "analysis",
-      box(
-        title = "Movies",
-        status = "primary",
-        width = 6,
-        height = "500px",
-        plotOutput(outputId = "scatter")
-      ),
-      tabBox(
-        width = 6,
-        height = "500px",
-        tabPanel(
-          title = "Movie info"
+      ## Analysis content --------------------------------------------------------
+      tabItem(
+        tabName = "analysis",
+        box(
+          title = "Movies",
+          status = "primary",
+          width = 6,
+          height = "500px",
+          plotOutput(outputId = "scatter",
+                     hover = "scatter_hover")
         ),
-        tabPanel(
-          title = "Data Table",
+        tabBox(
+          width = 6,
+          height = "500px",
+          tabPanel(
+            title = "Movie info",
+            uiOutput("movie_info")
+          ),
+          tabPanel(
+            title = "Data Table",
+          ),
+          tabPanel(
+            title = "Model",
+          )
         ),
-        tabPanel(
-          title = "Model",
+        box(
+          width = 12,
+          dataTableOutput("select_table")
         )
-      ),
-      box(
-        width = 12,
-        dataTableOutput("select_table")
       )
-    )
 
+    )
   )
 )
