@@ -15,6 +15,9 @@ slides > slide {
   overflow-x: auto !important;
   overflow-y: auto !important;
 }
+code{
+  background: #E4E5E7;
+}
 </style>
 
 
@@ -540,6 +543,7 @@ Goal: loading a file
 
 7. (exercise) add a preview of the dataset in the first tab.
   
+
 
 
 
