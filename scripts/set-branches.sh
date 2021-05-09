@@ -14,7 +14,21 @@ function greset() {
 
 
 
-gcob 0.16 && greset main
+gcob 1.13 && greset main
+gcob 1.12.1 && greset 1.13^
+gcob 1.11 && greset 1.12.1^
+gcob 1.10 && greset 1.11^
+gcob 1.9 && greset 1.10^
+gcob 1.8 && greset 1.9^
+gcob 1.7 && greset 1.8^
+gcob 1.6 && greset 1.7^
+gcob 1.5 && greset 1.6^
+gcob 1.4 && greset 1.5^
+gcob 1.3 && greset 1.4^
+gcob 1.2 && greset 1.3^
+gcob 1.1 && greset 1.2^
+gcob 1.0 && greset 1.1^
+gcob 0.16 && greset 1.0
 gcob 0.15 && greset 0.16^
 gcob 0.14 && greset 0.15^
 gcob 0.13 && greset 0.14^
@@ -31,4 +45,4 @@ gcob 0.3 && greset 0.4^
 gcob 0.1 && greset 0.3^
 gcob 0.0 && greset 0.1^
 
-git push dev --all -f
+# git push dev --all -f
