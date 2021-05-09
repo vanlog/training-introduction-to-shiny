@@ -1,5 +1,7 @@
 server <- function(input, output, session) {
 
+  # variables --------------------------------------------------------------
+
   x_colour <- "darkred"
   y_colour <- "darkgoldenrod"
   marvel_color <- 'lightblue'
@@ -7,18 +9,33 @@ server <- function(input, output, session) {
   dollar_bill_color <- "#85bb65"
   budget_range <- range(df$Budget, df$Opening_Weekend_USA, df$Gross_USA, df$Gross_Worldwide)
 
+  # reactives --------------------------------------------------------------
+
+  data_subset <- reactive({
+    flog.info("updating data_subset...")
+
+    subset_indices <- input$select_table_rows_all       # rows on all pages (after being filtered)
+    df[subset_indices,]
+  })
+
+  # scatter ----------------------------------------------------------------
+
   output$scatter <- renderPlot({
     flog.info("Rendering scatter...")
 
     ggplot(df) +
       aes_string(x = "Budget", y = "Gross_Worldwide") +
-      geom_point() +
+      geom_point(pch=21, fill="gray", size=2, colour="gray", stroke=1) +
+      geom_point(data = data_subset(),
+                 pch=21, fill="black", size=2, colour="black", stroke=1) +
       theme_bw() +
       theme(axis.title.x = element_text(colour = x_colour,
                                         size = 18),
             axis.title.y = element_text(colour = y_colour,
                                         size = 18))
   })
+
+  # select_table -----------------------------------------------------------
 
   output$select_table <- renderDataTable({
     flog.info("Rendering select_table...")
