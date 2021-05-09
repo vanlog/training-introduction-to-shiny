@@ -7,7 +7,6 @@ server <- function(input, output, session) {
   marvel_color <- 'lightblue'
   dc_color <- 'lightgreen'
   dollar_bill_color <- "#85bb65"
-  budget_range <- range(df$Budget, df$Opening_Weekend_USA, df$Gross_USA, df$Gross_Worldwide)
 
   # reactives --------------------------------------------------------------
 
@@ -15,21 +14,47 @@ server <- function(input, output, session) {
     flog.info("updating data_subset...")
 
     subset_indices <- input$select_table_rows_all       # rows on all pages (after being filtered)
-    df[subset_indices,]
+    dataset()[subset_indices,]
   })
 
   data_visible <- reactive({
     flog.info("updating data_visible...")
 
     visible_indices <- input$select_table_rows_current   # rows on the current page
-    df[visible_indices,]
+    dataset()[visible_indices,]
   })
 
   data_selected <- reactive({
     flog.info("updating data_selected...")
 
     selected_indices <- input$select_table_rows_selected # selected rows (by a click)
-    df[selected_indices,]
+    dataset()[selected_indices,]
+  })
+
+  dataset <- eventReactive(input$data_file, {
+    # input$dataset will be NULL initially. And so the dataset() reactive
+    req(input$data_file)
+
+    tryCatch(
+      {
+        df <- read_csv(input$data_file$datapath) %>%
+          mutate(Company = factor(Company),
+                 Release = as.integer(Release),
+                 Id = as.integer(Id),
+                 Metascore = as.integer(Metascore))
+      },
+      error = function(e) {
+        # return a safeError if a parsing error occurs
+        stop(safeError(e))
+      }
+    )
+
+    return(df)
+  })
+
+  budget_range <- eventReactive(dataset(), {
+    df <- dataset()
+    range(df$Budget, df$Opening_Weekend_USA, df$Gross_USA, df$Gross_Worldwide)
   })
 
   # scatter ----------------------------------------------------------------
@@ -37,7 +62,7 @@ server <- function(input, output, session) {
   output$scatter <- renderPlot({
     flog.info("Rendering scatter...")
 
-    ggplot(df) +
+    ggplot(dataset()) +
       aes_string(x = "Budget", y = "Gross_Worldwide") +
       geom_point(pch=21, fill="gray", size=2, colour="gray", stroke=1) +
       geom_point(data = data_subset(),
@@ -59,7 +84,7 @@ server <- function(input, output, session) {
     flog.info("Rendering select_table...")
 
     datatable(
-      df,
+      dataset(),
       option = list(
         search = list(
           regex = TRUE,            # use regular expressions
@@ -73,7 +98,7 @@ server <- function(input, output, session) {
       # in-line bar
       formatStyle(
         'Rate',
-        background = styleColorBar(df$Rate, 'steelblue'),
+        background = styleColorBar(dataset()$Rate, 'steelblue'),
         backgroundSize = '90% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -81,7 +106,7 @@ server <- function(input, output, session) {
       # in-line bar
       formatStyle(
         'Metascore',
-        background = styleColorBar(df$Metascore, 'steelblue'),
+        background = styleColorBar(dataset()$Metascore, 'steelblue'),
         backgroundSize = '90% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -89,7 +114,7 @@ server <- function(input, output, session) {
       # in-line bar
       formatStyle(
         'Minutes',
-        background = styleColorBar(df$Minutes, 'steelblue'),
+        background = styleColorBar(dataset()$Minutes, 'steelblue'),
         backgroundSize = '90% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'
@@ -99,14 +124,14 @@ server <- function(input, output, session) {
         'Company',
         transform = 'rotateX(45deg) rotateY(0deg) rotateZ(0deg)',
         backgroundColor = styleEqual(
-          unique(df$Company), c(marvel_color, dc_color)
+          unique(dataset()$Company), c(marvel_color, dc_color)
         )
       ) %>%
       # dollar bars with the same scales
       formatStyle(
         c("Budget", "Opening_Weekend_USA", "Gross_USA", "Gross_Worldwide"),
         color = 'black',
-        background = styleColorBar(budget_range, dollar_bill_color),
+        background = styleColorBar(budget_range(), dollar_bill_color),
         backgroundSize = '100% 90%',
         backgroundRepeat = 'no-repeat',
         backgroundPosition = 'center'

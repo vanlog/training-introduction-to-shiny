@@ -5,6 +5,7 @@ ui <- dashboardPage(
   dashboardSidebar(
 
     sidebarMenu(
+      menuItem(text = "Load data", tabName = "load_data", icon = icon("fa-database", lib = "font-awesome")),
       menuItem(text = "Analysis", tabName = "analysis", icon = icon("fa-line-chart", lib = "font-awesome"))
     )
 
@@ -14,6 +15,22 @@ ui <- dashboardPage(
   dashboardBody(
     tabItems(
 
+      ## load data content -------------------------------------------------------
+      tabItem(
+        tabName = "load_data",
+        box(
+          title = "Upload data",
+          status = "primary",
+          width = 6,
+          fileInput(
+            "data_file",
+            "Choose CSV File",
+            multiple = FALSE,
+            accept = c("text/csv",
+                       "text/comma-separated-values,text/plain",
+                       ".csv")),
+        )
+      ),
       ## Analysis content --------------------------------------------------------
       tabItem(
         tabName = "analysis",
