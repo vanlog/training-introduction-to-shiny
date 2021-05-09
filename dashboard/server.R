@@ -116,5 +116,20 @@ server <- function(input, output, session) {
       formatStyle("Gross_Worldwide",  color = y_colour, fontWeight = 'bold')
   })
 
+  # movie_info -------------------------------------------------------------
+  output$movie_info <- renderUI({
+    point <- input$scatter_hover
+    flog.info("Point hover is %s", point$Original_Title)
+
+    if (is.null(point)) {
+      tags$p("Please select a movie from the plot")
+    } else {
+      tagList(
+        p("Budget: ", round(point$x,2)) ,
+        p("Gross_Worldwide: ", round(point$y,2))
+      )
+    }
+  })
+
 }
 

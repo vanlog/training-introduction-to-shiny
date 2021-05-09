@@ -21,13 +21,15 @@ ui <- dashboardPage(
         status = "primary",
         width = 6,
         height = "500px",
-        plotOutput(outputId = "scatter")
+        plotOutput(outputId = "scatter",
+                   hover = "scatter_hover")
       ),
       tabBox(
         width = 6,
         height = "500px",
         tabPanel(
-          title = "Movie info"
+          title = "Movie info",
+          uiOutput("movie_info")
         ),
         tabPanel(
           title = "Data Table",
