@@ -18,6 +18,13 @@ server <- function(input, output, session) {
     df[subset_indices,]
   })
 
+  data_visible <- reactive({
+    flog.info("updating data_visible...")
+
+    visible_indices <- input$select_table_rows_current   # rows on the current page
+    df[visible_indices,]
+  })
+
   # scatter ----------------------------------------------------------------
 
   output$scatter <- renderPlot({
@@ -28,6 +35,8 @@ server <- function(input, output, session) {
       geom_point(pch=21, fill="gray", size=2, colour="gray", stroke=1) +
       geom_point(data = data_subset(),
                  pch=21, fill="black", size=2, colour="black", stroke=1) +
+      geom_point(data = data_visible(),
+                 pch=21, fill="blue", size=4, colour="blue", stroke=1) +
       theme_bw() +
       theme(axis.title.x = element_text(colour = x_colour,
                                         size = 18),
