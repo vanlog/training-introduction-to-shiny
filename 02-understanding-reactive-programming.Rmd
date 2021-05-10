@@ -1,8 +1,11 @@
 ---
 title: "Understanding reactive programming"
-author: "Andrea Melloncelli"
+author: 
+  - Andrea Melloncelli<br><br>andrea@vanlog.it
 date: "10/5/2021"
-output: ioslides_presentation
+output: 
+  ioslides_presentation:
+    footer: "Copyright (c) 2021, Andrea Melloncelli"
 ---
 
 ```{r setup, include=FALSE}
@@ -18,6 +21,8 @@ slides > slide {
 
 
 # Reactivity
+
+## Referencies
 
 <https://shiny.rstudio.com/articles/reactivity-overview.html>
 

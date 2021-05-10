@@ -1,9 +1,11 @@
 ---
 title: "Simple Shiny App"
-author: "Andrea Melloncelli"
+author: 
+  - Andrea Melloncelli<br><br>andrea@vanlog.it
 date: "10/5/2021"
 output:
-  slidy_presentation: default
+  slidy_presentation: 
+    footer: "Copyright (c) 2021, Andrea Melloncelli"
 ---
 
 ```{r setup, include=FALSE}
